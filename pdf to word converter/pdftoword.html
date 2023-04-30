@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PDF to Word Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ec5fa4;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="file"] {
+      margin-top: 5px;
+    }
+    #output {
+      margin-top: 20px;
+    }
+    #output a {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: blue;
+    }
+
+    img{
+      width: 15%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PDF to Word Converter</h1>
+    <form id="pdf-to-word-form">
+      <div class="form-group">
+        <label for="pdf-file">Select a PDF file:</label>
+        <input type="file" id="pdf-file" name="pdf-file" accept=".pdf">
+      </div>
+      <div class="form-group">
+        <button type="submit">Convert to Word</button>
+      </div>
+    </form>
+    <img src="pdf-icon-4.png">
+    <img src="Arrow pink.png">
+    <img src="word.jpg" style="width:30%;">
+  </div>
+  <script>
+    const form = document.getElementById('pdf-to-word-form');
+    const output = document.getElementById('output');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      const response = await fetch('/convert', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      output.innerHTML = '';
+
+      if (data.error) {
+        output.innerHTML = `<p>Error: ${data.error}</p>`;
+      } else {
+        const downloadLink = `<a href="${data.wordFileUrl}" download="${data.wordFileName}">Download Word file</a>`;
+        output.innerHTML = `<p>Conversion complete!</p>${downloadLink}`;
+      }
+    });
+  </script>
+</body>
+</html>
